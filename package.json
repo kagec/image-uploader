@@ -27,7 +27,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' nodemon --watch './mock/server.ts' --exec 'ts-node' ./mock/server.ts "
   },
   "eslintConfig": {
     "extends": [
