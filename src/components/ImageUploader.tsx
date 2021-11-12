@@ -10,7 +10,7 @@ const ImageUploader: VFC = () => {
       <DragAndDrop>
         <div>Drag & Drop your image here</div>
       </DragAndDrop>
-      <div>Or</div>
+      <Or>Or</Or>
       <label>
         choose a file
         <input name="image" accept="image/*" type="file" />
@@ -53,6 +53,12 @@ const DragAndDrop = styled.div`
     font-size: 12px;
     margin-top: 161px;
   }
+`;
+
+const Or = styled.div`
+  color: #bdbdbd;
+  font-size: 12px;
+  margin-top: 18px;
 `;
 
 export default ImageUploader;
