@@ -9,6 +9,10 @@ const ImageUploader: VFC = () => {
         <div>Drag & Drop your image here</div>
       </div>
       <div>Or</div>
+      <label>
+        choose a file
+        <input name="image" accept="image/*" type="file" />
+      </label>
     </div>
   );
 };
