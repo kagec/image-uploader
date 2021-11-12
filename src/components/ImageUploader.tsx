@@ -39,6 +39,7 @@ const Hint = styled.div`
 `;
 
 const DragAndDrop = styled.div`
+  min-width: 338px;
   min-height: 219px;
   background: #f6f8fb;
   border: 1px dashed #97bef4;
