@@ -1,10 +1,11 @@
 import axios from "axios";
-import type { VFC, ChangeEvent } from "react";
+import type { VFC, ChangeEvent, DragEvent, MouseEvent } from "react";
 import styled from "styled-components";
 import Image from "../image/image.svg";
 
 type OnChangeInput = (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
 type PostImageData = (files: FileList | null) => Promise<void>;
+type OnDrop = (e: DragEvent) => Promise<void>;
 
 const URL = "http://localhost:4000/public/image";
 
@@ -42,11 +43,31 @@ const ImageUploader: VFC = () => {
     e.target.value = "";
   };
 
+  const onDrop: OnDrop = async (e) => {
+    e.preventDefault();
+
+    const { files } = e.dataTransfer;
+
+    if (files.length > 1) {
+      alert("Please select only one image");
+      return;
+    } else if (!files[0].type.includes("image/")) {
+      alert("Please select a image file (jpeg, png...)");
+      return;
+    }
+
+    await postImageData(e.dataTransfer.files);
+  };
+
+  const onDragOver = (e: MouseEvent) => {
+    e.preventDefault();
+  };
+
   return (
     <ImageUploaderConteiner>
       <Header>Upload your image</Header>
       <Hint>FIle should be Jpeg Png...</Hint>
-      <DragAndDrop>
+      <DragAndDrop onDrop={onDrop} onDragOver={onDragOver}>
         <div>Drag & Drop your image here</div>
       </DragAndDrop>
       <Or>Or</Or>
