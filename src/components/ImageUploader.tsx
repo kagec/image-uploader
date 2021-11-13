@@ -1,8 +1,36 @@
-import type { VFC } from "react";
+import axios from "axios";
+import type { VFC, ChangeEvent } from "react";
 import styled from "styled-components";
 import Image from "../image/image.svg";
 
+type UploadFile = (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
+
+const URL = "http://localhost:4000/public/image";
+
 const ImageUploader: VFC = () => {
+  const uploadFile: UploadFile = async (e) => {
+    const { files } = e.target;
+    const postImage = new FormData();
+
+    if (!files) {
+      alert("Please select your image");
+      return;
+    }
+
+    postImage.append("image", files[0]);
+    e.target.value = "";
+
+    try {
+      await axios.post(URL, postImage, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
     <ImageUploaderConteiner>
       <Header>Upload your image</Header>
@@ -13,7 +41,12 @@ const ImageUploader: VFC = () => {
       <Or>Or</Or>
       <InputLabel>
         choose a file
-        <input name="image" accept="image/*" type="file" />
+        <input
+          name="image"
+          accept="image/*"
+          type="file"
+          onChange={uploadFile}
+        />
       </InputLabel>
     </ImageUploaderConteiner>
   );
