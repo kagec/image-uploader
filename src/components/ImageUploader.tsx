@@ -4,31 +4,42 @@ import styled from "styled-components";
 import Image from "../image/image.svg";
 
 type UploadFile = (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
+type PostImageData = (files: FileList | null) => Promise<void>;
 
 const URL = "http://localhost:4000/public/image";
+
+const postImageData: PostImageData = async (files) => {
+  const postImage = new FormData();
+
+  if (!files) {
+    return;
+  }
+
+  postImage.append("image", files[0]);
+
+  try {
+    await axios.post(URL, postImage, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  } catch (e) {
+    console.error(e);
+  }
+};
 
 const ImageUploader: VFC = () => {
   const uploadFile: UploadFile = async (e) => {
     const { files } = e.target;
-    const postImage = new FormData();
 
     if (!files) {
       alert("Please select your image");
       return;
     }
 
-    postImage.append("image", files[0]);
-    e.target.value = "";
+    await postImageData(files);
 
-    try {
-      await axios.post(URL, postImage, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-    } catch (e) {
-      console.error(e);
-    }
+    e.target.value = "";
   };
 
   return (
