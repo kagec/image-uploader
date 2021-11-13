@@ -3,7 +3,7 @@ import type { VFC, ChangeEvent } from "react";
 import styled from "styled-components";
 import Image from "../image/image.svg";
 
-type UploadFile = (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
+type OnChangeInput = (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
 type PostImageData = (files: FileList | null) => Promise<void>;
 
 const URL = "http://localhost:4000/public/image";
@@ -29,7 +29,7 @@ const postImageData: PostImageData = async (files) => {
 };
 
 const ImageUploader: VFC = () => {
-  const uploadFile: UploadFile = async (e) => {
+  const onChangeInput: OnChangeInput = async (e) => {
     const { files } = e.target;
 
     if (!files) {
@@ -56,7 +56,7 @@ const ImageUploader: VFC = () => {
           name="image"
           accept="image/*"
           type="file"
-          onChange={uploadFile}
+          onChange={onChangeInput}
         />
       </InputLabel>
     </ImageUploaderConteiner>
