@@ -25,7 +25,7 @@ const postImageData: PostImageData = async (files) => {
       },
     });
   } catch (e) {
-    console.error(e);
+    throw new Error();
   }
 };
 
