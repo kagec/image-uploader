@@ -38,7 +38,11 @@ const ImageUploader: VFC = () => {
       return;
     }
 
-    await postImageData(files);
+    try {
+      await postImageData(files);
+    } catch (e) {
+      alert("Upload failed");
+    }
 
     e.target.value = "";
   };
@@ -56,7 +60,11 @@ const ImageUploader: VFC = () => {
       return;
     }
 
-    await postImageData(e.dataTransfer.files);
+    try {
+      await postImageData(e.dataTransfer.files);
+    } catch (e) {
+      alert("Upload failed");
+    }
   };
 
   const onDragOver = (e: MouseEvent) => {
