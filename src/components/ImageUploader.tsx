@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useState } from "react";
 import type { VFC, ChangeEvent, DragEvent, MouseEvent } from "react";
 import styled from "styled-components";
 import Image from "../image/image.svg";
@@ -30,6 +31,15 @@ const postImageData: PostImageData = async (files) => {
 };
 
 const ImageUploader: VFC = () => {
+  const [imageData, setImageData] = useState<string | ArrayBuffer | null>();
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    if (!e.target) {
+      return;
+    }
+    setImageData(e.target.result);
+  };
+
   const onChangeInput: OnChangeInput = async (e) => {
     const { files } = e.target;
 
@@ -40,6 +50,7 @@ const ImageUploader: VFC = () => {
 
     try {
       await postImageData(files);
+      reader.readAsDataURL(files[0]);
     } catch (e) {
       alert("Upload failed");
     }
@@ -62,6 +73,7 @@ const ImageUploader: VFC = () => {
 
     try {
       await postImageData(e.dataTransfer.files);
+      reader.readAsDataURL(files[0]);
     } catch (e) {
       alert("Upload failed");
     }
