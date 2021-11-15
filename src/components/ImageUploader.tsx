@@ -85,7 +85,9 @@ const ImageUploader: VFC = () => {
 
   return (
     <ImageUploaderConteiner>
-      {imageData ? <span className="material-icons">check_circle</span> : null}
+      {imageData ? (
+        <MaterialIcon className="material-icons">check_circle</MaterialIcon>
+      ) : null}
       <Header>
         {imageData ? "Uploaded Successfully!" : "Upload your image"}
       </Header>
@@ -181,4 +183,8 @@ const InputLabel = styled.label`
   }
 `;
 
+const MaterialIcon = styled.span`
+  font-size: 40px;
+  color: #219653;
+`;
 export default ImageUploader;
