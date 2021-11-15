@@ -85,21 +85,35 @@ const ImageUploader: VFC = () => {
 
   return (
     <ImageUploaderConteiner>
-      <Header>Upload your image</Header>
-      <Hint>FIle should be Jpeg Png...</Hint>
+      {imageData ? <span className="material-icons">check_circle</span> : null}
+      <Header>
+        {imageData ? "Uploaded Successfully!" : "Upload your image"}
+      </Header>
+      {imageData ? null : <Hint>FIle should be Jpeg Png...</Hint>}
       <DragAndDrop onDrop={onDrop} onDragOver={onDragOver}>
-        <div>Drag & Drop your image here</div>
+        {imageData ? (
+          <img src={imageData as string} alt="here" />
+        ) : (
+          <div>Drag & Drop your image here</div>
+        )}
       </DragAndDrop>
-      <Or>Or</Or>
-      <InputLabel>
-        choose a file
-        <input
-          name="image"
-          accept="image/*"
-          type="file"
-          onChange={onChangeInput}
-        />
-      </InputLabel>
+      {imageData ? null : <Or>Or</Or>}
+      {imageData ? (
+        <div>
+          <span></span>
+          <button>Copy Link</button>
+        </div>
+      ) : (
+        <InputLabel>
+          choose a file
+          <input
+            name="image"
+            accept="image/*"
+            type="file"
+            onChange={onChangeInput}
+          />
+        </InputLabel>
+      )}
     </ImageUploaderConteiner>
   );
 };
