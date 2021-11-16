@@ -92,6 +92,14 @@ const ImageUploader: VFC = () => {
     e.preventDefault();
   };
 
+  const copyUrlToClipboard = () => {
+    try {
+      navigator.clipboard.writeText(imageUrlOnServer);
+    } catch (e) {
+      alert("Copy to clipboard failed!");
+    }
+  };
+
   return (
     <ImageUploaderConteiner>
       {imageData ? (
@@ -114,7 +122,7 @@ const ImageUploader: VFC = () => {
       {imageData ? (
         <CopyLink>
           <span>{imageUrlOnServer}</span>
-          <button>Copy Link</button>
+          <button onClick={copyUrlToClipboard}>Copy Link</button>
         </CopyLink>
       ) : (
         <InputLabel>
