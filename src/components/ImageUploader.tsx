@@ -34,6 +34,7 @@ const postImageData: PostImageData = async (files) => {
 const ImageUploader: VFC = () => {
   const [imageData, setImageData] = useState<string | ArrayBuffer | null>();
   const [imageUrlOnServer, setImageUrlOnServer] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
 
   const reader = new FileReader();
   reader.onload = (e) => {
@@ -54,11 +55,14 @@ const ImageUploader: VFC = () => {
     const fileName = files[0].name;
 
     try {
+      setIsUploading(true);
       await postImageData(files);
       reader.readAsDataURL(files[0]);
       setImageUrlOnServer(`${SERVER_URL}/${fileName}`);
+      setIsUploading(false);
     } catch (e) {
       alert("Upload failed");
+      setIsUploading(false);
     }
 
     e.target.value = "";
@@ -80,11 +84,14 @@ const ImageUploader: VFC = () => {
     const fileName = files[0].name;
 
     try {
+      setIsUploading(true);
       await postImageData(e.dataTransfer.files);
       reader.readAsDataURL(files[0]);
       setImageUrlOnServer(`${SERVER_URL}/${fileName}`);
+      setIsUploading(false);
     } catch (e) {
       alert("Upload failed");
+      setIsUploading(false);
     }
   };
 
@@ -101,7 +108,12 @@ const ImageUploader: VFC = () => {
     }
   };
 
-  return (
+  return isUploading ? (
+    <LoadingContainer>
+      Uploading...
+      <LoadingAnimation></LoadingAnimation>
+    </LoadingContainer>
+  ) : (
     <ImageUploaderConteiner>
       {imageData ? (
         <MaterialIcon className="material-icons">check_circle</MaterialIcon>
@@ -241,6 +253,47 @@ const CopyLink = styled.div`
     background-color: #2f80ed;
     border-color: transparent;
     border-radius: 8px;
+  }
+`;
+
+const LoadingContainer = styled.div`
+  color: #4f4f4f;
+  font-size: 18px;
+  width: 400px;
+  height: 144px;
+  padding-top: 36px;
+  padding-left: 32px;
+  background-color: #fff;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+`;
+
+const LoadingAnimation = styled.div`
+  position: relative;
+  width: 340px;
+  height: 6px;
+  margin-top: 31px;
+  background-color: #f2f2f2;
+  border-radius: 8px;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    background-color: #2f80ed;
+    border-radius: 8px;
+    width: 101px;
+    height: 6px;
+    animation: lineAnime 1.5s linear 0s infinite normal forwards;
+  }
+
+  @keyframes lineAnime {
+    from {
+      transform: translateX(-100px);
+    }
+    to {
+      transform: translateX(340px);
+    }
   }
 `;
 
