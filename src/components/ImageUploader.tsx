@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useState } from "react";
 import type { VFC, ChangeEvent, DragEvent, MouseEvent } from "react";
 import styled from "styled-components";
 import Image from "../image/image.svg";
@@ -25,11 +26,20 @@ const postImageData: PostImageData = async (files) => {
       },
     });
   } catch (e) {
-    console.error(e);
+    throw new Error();
   }
 };
 
 const ImageUploader: VFC = () => {
+  const [imageData, setImageData] = useState<string | ArrayBuffer | null>();
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    if (!e.target) {
+      return;
+    }
+    setImageData(e.target.result);
+  };
+
   const onChangeInput: OnChangeInput = async (e) => {
     const { files } = e.target;
 
@@ -38,7 +48,12 @@ const ImageUploader: VFC = () => {
       return;
     }
 
-    await postImageData(files);
+    try {
+      await postImageData(files);
+      reader.readAsDataURL(files[0]);
+    } catch (e) {
+      alert("Upload failed");
+    }
 
     e.target.value = "";
   };
@@ -56,7 +71,12 @@ const ImageUploader: VFC = () => {
       return;
     }
 
-    await postImageData(e.dataTransfer.files);
+    try {
+      await postImageData(e.dataTransfer.files);
+      reader.readAsDataURL(files[0]);
+    } catch (e) {
+      alert("Upload failed");
+    }
   };
 
   const onDragOver = (e: MouseEvent) => {
@@ -65,21 +85,34 @@ const ImageUploader: VFC = () => {
 
   return (
     <ImageUploaderConteiner>
-      <Header>Upload your image</Header>
-      <Hint>FIle should be Jpeg Png...</Hint>
-      <DragAndDrop onDrop={onDrop} onDragOver={onDragOver}>
-        <div>Drag & Drop your image here</div>
-      </DragAndDrop>
-      <Or>Or</Or>
-      <InputLabel>
-        choose a file
-        <input
-          name="image"
-          accept="image/*"
-          type="file"
-          onChange={onChangeInput}
-        />
-      </InputLabel>
+      {imageData ? (
+        <MaterialIcon className="material-icons">check_circle</MaterialIcon>
+      ) : null}
+      <Header>
+        {imageData ? "Uploaded Successfully!" : "Upload your image"}
+      </Header>
+      {imageData ? null : <Hint>FIle should be Jpeg Png...</Hint>}
+      <DragAndDropWrapper>
+        {imageData ? (
+          <img src={imageData as string} alt="here" />
+        ) : (
+          <DragAndDrop onDrop={onDrop} onDragOver={onDragOver}>
+            <div>Drag & Drop your image here</div>
+          </DragAndDrop>
+        )}
+      </DragAndDropWrapper>
+      {imageData ? null : <Or>Or</Or>}
+      {imageData ? null : (
+        <InputLabel>
+          choose a file
+          <input
+            name="image"
+            accept="image/*"
+            type="file"
+            onChange={onChangeInput}
+          />
+        </InputLabel>
+      )}
     </ImageUploaderConteiner>
   );
 };
@@ -101,6 +134,10 @@ const Hint = styled.div`
   color: #828282;
   font-size: 10px;
   margin-top: 16px;
+`;
+
+const DragAndDropWrapper = styled.div`
+  margin-top: 25px;
 `;
 
 const DragAndDrop = styled.div`
@@ -145,6 +182,11 @@ const InputLabel = styled.label`
   &:hover {
     cursor: pointer;
   }
+`;
+
+const MaterialIcon = styled.span`
+  font-size: 40px;
+  color: #219653;
 `;
 
 export default ImageUploader;
