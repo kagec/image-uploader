@@ -34,6 +34,7 @@ const postImageData: PostImageData = async (files) => {
 const ImageUploader: VFC = () => {
   const [imageData, setImageData] = useState<string | ArrayBuffer | null>();
   const [imageUrlOnServer, setImageUrlOnServer] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
 
   const reader = new FileReader();
   reader.onload = (e) => {
@@ -54,11 +55,14 @@ const ImageUploader: VFC = () => {
     const fileName = files[0].name;
 
     try {
+      setIsUploading(true);
       await postImageData(files);
       reader.readAsDataURL(files[0]);
       setImageUrlOnServer(`${SERVER_URL}/${fileName}`);
+      setIsUploading(false);
     } catch (e) {
       alert("Upload failed");
+      setIsUploading(false);
     }
 
     e.target.value = "";
@@ -80,11 +84,14 @@ const ImageUploader: VFC = () => {
     const fileName = files[0].name;
 
     try {
+      setIsUploading(true);
       await postImageData(e.dataTransfer.files);
       reader.readAsDataURL(files[0]);
       setImageUrlOnServer(`${SERVER_URL}/${fileName}`);
+      setIsUploading(false);
     } catch (e) {
       alert("Upload failed");
+      setIsUploading(false);
     }
   };
 
@@ -101,7 +108,9 @@ const ImageUploader: VFC = () => {
     }
   };
 
-  return (
+  return isUploading ? (
+    <div>Uploading...</div>
+  ) : (
     <ImageUploaderConteiner>
       {imageData ? (
         <MaterialIcon className="material-icons">check_circle</MaterialIcon>
