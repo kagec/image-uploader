@@ -102,12 +102,7 @@ const ImageUploader: VFC = () => {
         )}
       </DragAndDropWrapper>
       {imageData ? null : <Or>Or</Or>}
-      {imageData ? (
-        <CopyLink>
-          <span></span>
-          <button>Copy Link</button>
-        </CopyLink>
-      ) : (
+      {imageData ? null : (
         <InputLabel>
           choose a file
           <input
@@ -192,38 +187,6 @@ const InputLabel = styled.label`
 const MaterialIcon = styled.span`
   font-size: 40px;
   color: #219653;
-`;
-
-const CopyLink = styled.div`
-  display: inline-flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 338px;
-  height: 34px;
-  margin-top: 25px;
-  background-color: #f6f8fb;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-
-  > span {
-    color: #4f4f4f;
-    font-size: 8px;
-    width: 240px;
-    height: 12px;
-    margin-left: 7px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
-
-  > button {
-    color: #fff;
-    font-size: 8px;
-    width: 74px;
-    height: 30px;
-    background-color: #2f80ed;
-    border-color: transparent;
-    border-radius: 8px;
-  }
 `;
 
 export default ImageUploader;
