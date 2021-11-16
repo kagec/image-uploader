@@ -33,6 +33,8 @@ const postImageData: PostImageData = async (files) => {
 
 const ImageUploader: VFC = () => {
   const [imageData, setImageData] = useState<string | ArrayBuffer | null>();
+  const [imageUrlOnServer, setImageUrlOnServer] = useState("");
+
   const reader = new FileReader();
   reader.onload = (e) => {
     if (!e.target) {
@@ -49,9 +51,12 @@ const ImageUploader: VFC = () => {
       return;
     }
 
+    const fileName = files[0].name;
+
     try {
       await postImageData(files);
       reader.readAsDataURL(files[0]);
+      setImageUrlOnServer(`${SERVER_URL}/${fileName}`);
     } catch (e) {
       alert("Upload failed");
     }
@@ -72,9 +77,12 @@ const ImageUploader: VFC = () => {
       return;
     }
 
+    const fileName = files[0].name;
+
     try {
       await postImageData(e.dataTransfer.files);
       reader.readAsDataURL(files[0]);
+      setImageUrlOnServer(`${SERVER_URL}/${fileName}`);
     } catch (e) {
       alert("Upload failed");
     }
@@ -105,7 +113,7 @@ const ImageUploader: VFC = () => {
       {imageData ? null : <Or>Or</Or>}
       {imageData ? (
         <CopyLink>
-          <span></span>
+          <span>{imageUrlOnServer}</span>
           <button>Copy Link</button>
         </CopyLink>
       ) : (
