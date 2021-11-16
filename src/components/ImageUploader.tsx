@@ -109,7 +109,7 @@ const ImageUploader: VFC = () => {
   };
 
   return isUploading ? (
-    <div>Uploading...</div>
+    <LoadingContainer>Uploading...</LoadingContainer>
   ) : (
     <ImageUploaderConteiner>
       {imageData ? (
@@ -251,6 +251,18 @@ const CopyLink = styled.div`
     border-color: transparent;
     border-radius: 8px;
   }
+`;
+
+const LoadingContainer = styled.div`
+  color: #4f4f4f;
+  font-size: 18px;
+  width: 400px;
+  height: 144px;
+  padding-top: 36px;
+  padding-left: 32px;
+  background-color: #fff;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
 `;
 
 export default ImageUploader;
