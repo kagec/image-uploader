@@ -92,13 +92,13 @@ const ImageUploader: VFC = () => {
         {imageData ? "Uploaded Successfully!" : "Upload your image"}
       </Header>
       {imageData ? null : <Hint>FIle should be Jpeg Png...</Hint>}
-      <DragAndDrop onDrop={onDrop} onDragOver={onDragOver}>
-        {imageData ? (
-          <img src={imageData as string} alt="here" />
-        ) : (
+      {imageData ? (
+        <img src={imageData as string} alt="here" />
+      ) : (
+        <DragAndDrop onDrop={onDrop} onDragOver={onDragOver}>
           <div>Drag & Drop your image here</div>
-        )}
-      </DragAndDrop>
+        </DragAndDrop>
+      )}
       {imageData ? null : <Or>Or</Or>}
       {imageData ? (
         <CopyLink>
