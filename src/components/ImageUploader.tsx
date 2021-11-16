@@ -109,7 +109,10 @@ const ImageUploader: VFC = () => {
   };
 
   return isUploading ? (
-    <LoadingContainer>Uploading...</LoadingContainer>
+    <LoadingContainer>
+      Uploading...
+      <LoadingAnimation></LoadingAnimation>
+    </LoadingContainer>
   ) : (
     <ImageUploaderConteiner>
       {imageData ? (
@@ -263,6 +266,35 @@ const LoadingContainer = styled.div`
   background-color: #fff;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
+`;
+
+const LoadingAnimation = styled.div`
+  position: relative;
+  width: 340px;
+  height: 6px;
+  margin-top: 31px;
+  background-color: #f2f2f2;
+  border-radius: 8px;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    background-color: #2f80ed;
+    border-radius: 8px;
+    width: 101px;
+    height: 6px;
+    animation: lineAnime 1.5s linear 0s infinite normal forwards;
+  }
+
+  @keyframes lineAnime {
+    from {
+      transform: translateX(-100px);
+    }
+    to {
+      transform: translateX(340px);
+    }
+  }
 `;
 
 export default ImageUploader;
