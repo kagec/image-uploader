@@ -121,7 +121,7 @@ const ImageUploader: VFC = () => {
       {imageData ? null : <Or>Or</Or>}
       {imageData ? (
         <CopyLink>
-          <span>{imageUrlOnServer}</span>
+          <div>{imageUrlOnServer}</div>
           <button onClick={copyUrlToClipboard}>Copy Link</button>
         </CopyLink>
       ) : (
@@ -222,7 +222,7 @@ const CopyLink = styled.div`
   border: 1px solid #e0e0e0;
   border-radius: 8px;
 
-  > span {
+  > div {
     color: #4f4f4f;
     font-size: 8px;
     width: 240px;
@@ -230,6 +230,7 @@ const CopyLink = styled.div`
     margin-left: 7px;
     text-overflow: ellipsis;
     overflow: hidden;
+    white-space: nowrap;
   }
 
   > button {
