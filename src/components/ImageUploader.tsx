@@ -95,6 +95,7 @@ const ImageUploader: VFC = () => {
   const copyUrlToClipboard = () => {
     try {
       navigator.clipboard.writeText(imageUrlOnServer);
+      alert("Successful copy to clipboard");
     } catch (e) {
       alert("Copy to clipboard failed!");
     }
