@@ -8,7 +8,8 @@ type OnChangeInput = (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
 type PostImageData = (files: FileList | null) => Promise<void>;
 type OnDrop = (e: DragEvent) => Promise<void>;
 
-const URL = "http://localhost:4000/public/image";
+const SERVER_URL = "http://localhost:4000";
+const POST_IMAGE_URL = `${SERVER_URL}/public/image`;
 
 const postImageData: PostImageData = async (files) => {
   const postImage = new FormData();
@@ -20,7 +21,7 @@ const postImageData: PostImageData = async (files) => {
   postImage.append("image", files[0]);
 
   try {
-    await axios.post(URL, postImage, {
+    await axios.post(POST_IMAGE_URL, postImage, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -32,6 +33,8 @@ const postImageData: PostImageData = async (files) => {
 
 const ImageUploader: VFC = () => {
   const [imageData, setImageData] = useState<string | ArrayBuffer | null>();
+  const [imageUrlOnServer, setImageUrlOnServer] = useState("");
+
   const reader = new FileReader();
   reader.onload = (e) => {
     if (!e.target) {
@@ -48,9 +51,12 @@ const ImageUploader: VFC = () => {
       return;
     }
 
+    const fileName = files[0].name;
+
     try {
       await postImageData(files);
       reader.readAsDataURL(files[0]);
+      setImageUrlOnServer(`${SERVER_URL}/${fileName}`);
     } catch (e) {
       alert("Upload failed");
     }
@@ -71,9 +77,12 @@ const ImageUploader: VFC = () => {
       return;
     }
 
+    const fileName = files[0].name;
+
     try {
       await postImageData(e.dataTransfer.files);
       reader.readAsDataURL(files[0]);
+      setImageUrlOnServer(`${SERVER_URL}/${fileName}`);
     } catch (e) {
       alert("Upload failed");
     }
@@ -81,6 +90,15 @@ const ImageUploader: VFC = () => {
 
   const onDragOver = (e: MouseEvent) => {
     e.preventDefault();
+  };
+
+  const copyUrlToClipboard = () => {
+    try {
+      navigator.clipboard.writeText(imageUrlOnServer);
+      alert("Successful copy to clipboard");
+    } catch (e) {
+      alert("Copy to clipboard failed!");
+    }
   };
 
   return (
@@ -102,7 +120,12 @@ const ImageUploader: VFC = () => {
         )}
       </DragAndDropWrapper>
       {imageData ? null : <Or>Or</Or>}
-      {imageData ? null : (
+      {imageData ? (
+        <CopyLink>
+          <div>{imageUrlOnServer}</div>
+          <button onClick={copyUrlToClipboard}>Copy Link</button>
+        </CopyLink>
+      ) : (
         <InputLabel>
           choose a file
           <input
@@ -187,6 +210,38 @@ const InputLabel = styled.label`
 const MaterialIcon = styled.span`
   font-size: 40px;
   color: #219653;
+`;
+
+const CopyLink = styled.div`
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 338px;
+  height: 34px;
+  margin-top: 25px;
+  background-color: #f6f8fb;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+
+  > div {
+    color: #4f4f4f;
+    font-size: 8px;
+    width: 240px;
+    margin-left: 7px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  > button {
+    color: #fff;
+    font-size: 8px;
+    width: 74px;
+    height: 30px;
+    background-color: #2f80ed;
+    border-color: transparent;
+    border-radius: 8px;
+  }
 `;
 
 export default ImageUploader;

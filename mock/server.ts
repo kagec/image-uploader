@@ -3,7 +3,9 @@ import multer from "multer";
 
 const PORT = 4000;
 const server = jsonServer.create();
-const middlewares = jsonServer.defaults({ static: `${__dirname}/public` });
+const middlewares = jsonServer.defaults({
+  static: `${__dirname}/public/image`,
+});
 const storage = multer.diskStorage({
   destination: `${__dirname}/public/image`,
   filename: (req, file, cb) => {
