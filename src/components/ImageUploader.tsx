@@ -8,7 +8,8 @@ type OnChangeInput = (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
 type PostImageData = (files: FileList | null) => Promise<void>;
 type OnDrop = (e: DragEvent) => Promise<void>;
 
-const URL = "http://localhost:4000/public/image";
+const SERVER_URL = "http://localhost:4000";
+const POST_IMAGE_URL = `${SERVER_URL}/public/image`;
 
 const postImageData: PostImageData = async (files) => {
   const postImage = new FormData();
@@ -20,7 +21,7 @@ const postImageData: PostImageData = async (files) => {
   postImage.append("image", files[0]);
 
   try {
-    await axios.post(URL, postImage, {
+    await axios.post(POST_IMAGE_URL, postImage, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
