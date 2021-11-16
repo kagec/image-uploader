@@ -226,7 +226,6 @@ const CopyLink = styled.div`
     color: #4f4f4f;
     font-size: 8px;
     width: 240px;
-    height: 12px;
     margin-left: 7px;
     text-overflow: ellipsis;
     overflow: hidden;
