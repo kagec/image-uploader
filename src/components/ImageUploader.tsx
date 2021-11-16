@@ -195,7 +195,7 @@ const MaterialIcon = styled.span`
 `;
 
 const CopyLink = styled.div`
-  display: flex;
+  display: inline-flex;
   justify-content: space-between;
   align-items: center;
   width: 338px;
