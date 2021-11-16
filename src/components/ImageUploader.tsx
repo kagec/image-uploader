@@ -102,7 +102,12 @@ const ImageUploader: VFC = () => {
         )}
       </DragAndDropWrapper>
       {imageData ? null : <Or>Or</Or>}
-      {imageData ? null : (
+      {imageData ? (
+        <div>
+          <span></span>
+          <button>Copy Link</button>
+        </div>
+      ) : (
         <InputLabel>
           choose a file
           <input
