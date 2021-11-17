@@ -25,3 +25,8 @@ yarn-error.log*
 test
 
 /mock/public/image
+
+# firebase setting file
+/firebase.json
+/.firebaserc
+/src/firebase/config.ts
