@@ -1,35 +1,14 @@
-import axios from "axios";
 import { useState } from "react";
 import type { VFC, ChangeEvent, DragEvent, MouseEvent } from "react";
 import styled from "styled-components";
 import Image from "../image/image.svg";
+import { ref, uploadBytes } from "@firebase/storage";
+import { storage } from "../firebase/firebaseConfig";
 
 type OnChangeInput = (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
-type PostImageData = (files: FileList | null) => Promise<void>;
 type OnDrop = (e: DragEvent) => Promise<void>;
 
 const SERVER_URL = "http://localhost:4000";
-const POST_IMAGE_URL = `${SERVER_URL}/public/image`;
-
-const postImageData: PostImageData = async (files) => {
-  const postImage = new FormData();
-
-  if (!files) {
-    return;
-  }
-
-  postImage.append("image", files[0]);
-
-  try {
-    await axios.post(POST_IMAGE_URL, postImage, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-  } catch (e) {
-    throw new Error();
-  }
-};
 
 const ImageUploader: VFC = () => {
   const [imageData, setImageData] = useState<string | ArrayBuffer | null>();
@@ -53,10 +32,11 @@ const ImageUploader: VFC = () => {
     }
 
     const fileName = files[0].name;
+    const imagesRef = ref(storage, `images/${fileName}`);
 
     try {
       setIsUploading(true);
-      await postImageData(files);
+      await uploadBytes(imagesRef, files[0]);
       reader.readAsDataURL(files[0]);
       setImageUrlOnServer(`${SERVER_URL}/${fileName}`);
       setIsUploading(false);
@@ -82,10 +62,11 @@ const ImageUploader: VFC = () => {
     }
 
     const fileName = files[0].name;
+    const imagesRef = ref(storage, `images/${fileName}`);
 
     try {
       setIsUploading(true);
-      await postImageData(e.dataTransfer.files);
+      await uploadBytes(imagesRef, files[0]);
       reader.readAsDataURL(files[0]);
       setImageUrlOnServer(`${SERVER_URL}/${fileName}`);
       setIsUploading(false);
