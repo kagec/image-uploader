@@ -121,7 +121,7 @@ const ImageUploader: VFC = () => {
       <Header>
         {imageData ? "Uploaded Successfully!" : "Upload your image"}
       </Header>
-      {imageData ? null : <Hint>FIle should be Jpeg Png...</Hint>}
+      {imageData ? null : <Hint>FIle should be Jpeg, Png...</Hint>}
       <DragAndDropWrapper>
         {imageData ? (
           <img src={imageData as string} alt="here" />
