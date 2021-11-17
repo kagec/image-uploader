@@ -9,17 +9,8 @@ type OnChangeInput = (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
 type OnDrop = (e: DragEvent) => Promise<void>;
 
 const ImageUploader: VFC = () => {
-  const [imageData, setImageData] = useState<string | ArrayBuffer | null>();
   const [imageUrlOnServer, setImageUrlOnServer] = useState("");
   const [isUploading, setIsUploading] = useState(false);
-
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    if (!e.target) {
-      return;
-    }
-    setImageData(e.target.result);
-  };
 
   const onChangeInput: OnChangeInput = async (e) => {
     const { files } = e.target;
@@ -36,7 +27,6 @@ const ImageUploader: VFC = () => {
       setIsUploading(true);
       await uploadBytes(imagesRef, files[0]);
       const imageDownloadUrl = await getDownloadURL(imagesRef);
-      reader.readAsDataURL(files[0]);
       setImageUrlOnServer(imageDownloadUrl);
       setIsUploading(false);
     } catch (e) {
@@ -67,7 +57,6 @@ const ImageUploader: VFC = () => {
       setIsUploading(true);
       await uploadBytes(imagesRef, files[0]);
       const imageDownloadUrl = await getDownloadURL(imagesRef);
-      reader.readAsDataURL(files[0]);
       setImageUrlOnServer(imageDownloadUrl);
       setIsUploading(false);
     } catch (e) {
@@ -105,7 +94,7 @@ const ImageUploader: VFC = () => {
       {imageUrlOnServer ? null : <Hint>FIle should be Jpeg, Png...</Hint>}
       <DragAndDropWrapper>
         {imageUrlOnServer ? (
-          <img src={imageData as string} alt="here" />
+          <img src={imageUrlOnServer} alt="here" />
         ) : (
           <DragAndDrop onDrop={onDrop} onDragOver={onDragOver}>
             <div>Drag & Drop your image here</div>
