@@ -30,3 +30,4 @@ test
 /firebase.json
 /.firebaserc
 /src/firebase/config.ts
+/storage.rules
