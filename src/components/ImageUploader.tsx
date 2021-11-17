@@ -2,13 +2,11 @@ import { useState } from "react";
 import type { VFC, ChangeEvent, DragEvent, MouseEvent } from "react";
 import styled from "styled-components";
 import Image from "../image/image.svg";
-import { ref, uploadBytes } from "@firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "@firebase/storage";
 import { storage } from "../firebase/firebaseConfig";
 
 type OnChangeInput = (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
 type OnDrop = (e: DragEvent) => Promise<void>;
-
-const SERVER_URL = "http://localhost:4000";
 
 const ImageUploader: VFC = () => {
   const [imageData, setImageData] = useState<string | ArrayBuffer | null>();
@@ -37,8 +35,9 @@ const ImageUploader: VFC = () => {
     try {
       setIsUploading(true);
       await uploadBytes(imagesRef, files[0]);
+      const imageDownloadUrl = await getDownloadURL(imagesRef);
       reader.readAsDataURL(files[0]);
-      setImageUrlOnServer(`${SERVER_URL}/${fileName}`);
+      setImageUrlOnServer(imageDownloadUrl);
       setIsUploading(false);
     } catch (e) {
       alert("Upload failed");
@@ -67,8 +66,9 @@ const ImageUploader: VFC = () => {
     try {
       setIsUploading(true);
       await uploadBytes(imagesRef, files[0]);
+      const imageDownloadUrl = await getDownloadURL(imagesRef);
       reader.readAsDataURL(files[0]);
-      setImageUrlOnServer(`${SERVER_URL}/${fileName}`);
+      setImageUrlOnServer(imageDownloadUrl);
       setIsUploading(false);
     } catch (e) {
       alert("Upload failed");
