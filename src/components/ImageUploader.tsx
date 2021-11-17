@@ -96,15 +96,15 @@ const ImageUploader: VFC = () => {
     </LoadingContainer>
   ) : (
     <ImageUploaderConteiner>
-      {imageData ? (
+      {imageUrlOnServer ? (
         <MaterialIcon className="material-icons">check_circle</MaterialIcon>
       ) : null}
       <Header>
-        {imageData ? "Uploaded Successfully!" : "Upload your image"}
+        {imageUrlOnServer ? "Uploaded Successfully!" : "Upload your image"}
       </Header>
-      {imageData ? null : <Hint>FIle should be Jpeg, Png...</Hint>}
+      {imageUrlOnServer ? null : <Hint>FIle should be Jpeg, Png...</Hint>}
       <DragAndDropWrapper>
-        {imageData ? (
+        {imageUrlOnServer ? (
           <img src={imageData as string} alt="here" />
         ) : (
           <DragAndDrop onDrop={onDrop} onDragOver={onDragOver}>
@@ -112,8 +112,8 @@ const ImageUploader: VFC = () => {
           </DragAndDrop>
         )}
       </DragAndDropWrapper>
-      {imageData ? null : <Or>Or</Or>}
-      {imageData ? (
+      {imageUrlOnServer ? null : <Or>Or</Or>}
+      {imageUrlOnServer ? (
         <CopyLink>
           <div>{imageUrlOnServer}</div>
           <button onClick={copyUrlToClipboard}>Copy Link</button>
