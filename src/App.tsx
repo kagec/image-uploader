@@ -18,6 +18,10 @@ const AppContainer = styled.div`
   align-items: center;
   font-weight: 500;
   letter-spacing: -0.035em;
+
+  > footer {
+    bottom: 24px;
+  }
 `;
 
 export default App;

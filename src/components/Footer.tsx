@@ -12,6 +12,7 @@ const FooterSign = styled.footer`
   color: #a9a9a9;
   font-family: "Montserrat";
   font-size: 14px;
+  position: fixed;
 
   > span {
     font-weight: 700;
