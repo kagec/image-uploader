@@ -1,10 +1,12 @@
 import styled from "styled-components";
+import Footer from "./components/Footer";
 import ImageUploader from "./components/ImageUploader";
 
 const App = () => {
   return (
     <AppContainer>
       <ImageUploader />
+      <Footer />
     </AppContainer>
   );
 };
