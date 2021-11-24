@@ -1,48 +1,16 @@
-import axios from "axios";
 import { useState } from "react";
 import type { VFC, ChangeEvent, DragEvent, MouseEvent } from "react";
 import styled from "styled-components";
 import Image from "../image/image.svg";
+import { getDownloadURL, ref, uploadBytes } from "@firebase/storage";
+import { storage } from "../firebase/firebaseConfig";
 
 type OnChangeInput = (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
-type PostImageData = (files: FileList | null) => Promise<void>;
 type OnDrop = (e: DragEvent) => Promise<void>;
 
-const SERVER_URL = "http://localhost:4000";
-const POST_IMAGE_URL = `${SERVER_URL}/public/image`;
-
-const postImageData: PostImageData = async (files) => {
-  const postImage = new FormData();
-
-  if (!files) {
-    return;
-  }
-
-  postImage.append("image", files[0]);
-
-  try {
-    await axios.post(POST_IMAGE_URL, postImage, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-  } catch (e) {
-    throw new Error();
-  }
-};
-
 const ImageUploader: VFC = () => {
-  const [imageData, setImageData] = useState<string | ArrayBuffer | null>();
   const [imageUrlOnServer, setImageUrlOnServer] = useState("");
   const [isUploading, setIsUploading] = useState(false);
-
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    if (!e.target) {
-      return;
-    }
-    setImageData(e.target.result);
-  };
 
   const onChangeInput: OnChangeInput = async (e) => {
     const { files } = e.target;
@@ -53,12 +21,13 @@ const ImageUploader: VFC = () => {
     }
 
     const fileName = files[0].name;
+    const imagesRef = ref(storage, `images/${fileName}`);
 
     try {
       setIsUploading(true);
-      await postImageData(files);
-      reader.readAsDataURL(files[0]);
-      setImageUrlOnServer(`${SERVER_URL}/${fileName}`);
+      await uploadBytes(imagesRef, files[0]);
+      const imageDownloadUrl = await getDownloadURL(imagesRef);
+      setImageUrlOnServer(imageDownloadUrl);
       setIsUploading(false);
     } catch (e) {
       alert("Upload failed");
@@ -82,12 +51,13 @@ const ImageUploader: VFC = () => {
     }
 
     const fileName = files[0].name;
+    const imagesRef = ref(storage, `images/${fileName}`);
 
     try {
       setIsUploading(true);
-      await postImageData(e.dataTransfer.files);
-      reader.readAsDataURL(files[0]);
-      setImageUrlOnServer(`${SERVER_URL}/${fileName}`);
+      await uploadBytes(imagesRef, files[0]);
+      const imageDownloadUrl = await getDownloadURL(imagesRef);
+      setImageUrlOnServer(imageDownloadUrl);
       setIsUploading(false);
     } catch (e) {
       alert("Upload failed");
@@ -115,24 +85,24 @@ const ImageUploader: VFC = () => {
     </LoadingContainer>
   ) : (
     <ImageUploaderConteiner>
-      {imageData ? (
+      {imageUrlOnServer ? (
         <MaterialIcon className="material-icons">check_circle</MaterialIcon>
       ) : null}
       <Header>
-        {imageData ? "Uploaded Successfully!" : "Upload your image"}
+        {imageUrlOnServer ? "Uploaded Successfully!" : "Upload your image"}
       </Header>
-      {imageData ? null : <Hint>FIle should be Jpeg, Png...</Hint>}
+      {imageUrlOnServer ? null : <Hint>FIle should be Jpeg, Png...</Hint>}
       <DragAndDropWrapper>
-        {imageData ? (
-          <img src={imageData as string} alt="here" />
+        {imageUrlOnServer ? (
+          <img src={imageUrlOnServer} alt="here" />
         ) : (
           <DragAndDrop onDrop={onDrop} onDragOver={onDragOver}>
             <div>Drag & Drop your image here</div>
           </DragAndDrop>
         )}
       </DragAndDropWrapper>
-      {imageData ? null : <Or>Or</Or>}
-      {imageData ? (
+      {imageUrlOnServer ? null : <Or>Or</Or>}
+      {imageUrlOnServer ? (
         <CopyLink>
           <div>{imageUrlOnServer}</div>
           <button onClick={copyUrlToClipboard}>Copy Link</button>
